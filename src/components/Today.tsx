@@ -32,14 +32,14 @@ export default function Today({
 
   return (
     <div className="page">
-      <section className="streak-hero card">
+      <section className={`streak-hero card ${done ? 'is-done' : ''}`}>
         <div className="streak-main">
           <span className="streak-flame">
             <FlameIcon size={30} />
           </span>
           <div>
             <p className="eyebrow">Racha actual</p>
-            <p className="streak-number">
+            <p className="streak-number" key={streak}>
               {streak} <span>{streak === 1 ? 'día' : 'días'}</span>
             </p>
             <p className="muted small">
