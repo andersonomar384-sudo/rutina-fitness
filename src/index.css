@@ -20,6 +20,10 @@
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Consolas, 'Liberation Mono',
     monospace;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --dur-press: 160ms;
+  --dur-ui: 200ms;
+  --dur-slow: 240ms;
 }
 
 * {
@@ -48,7 +52,6 @@ body {
       transparent 1px,
       transparent 9px
     );
-  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -240,25 +243,25 @@ p {
 }
 
 .page > * {
-  animation: rise 280ms var(--ease-out) both;
+  animation: rise var(--dur-ui) var(--ease-out) both;
 }
 
 .page > *:nth-child(2) {
-  animation-delay: 45ms;
+  animation-delay: 30ms;
 }
 
 .page > *:nth-child(3) {
-  animation-delay: 90ms;
+  animation-delay: 60ms;
 }
 
 .page > *:nth-child(4) {
-  animation-delay: 130ms;
+  animation-delay: 90ms;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -357,14 +360,14 @@ p {
     radial-gradient(420px 200px at 0% 0%, rgba(200, 244, 79, 0.14), transparent 65%),
     linear-gradient(135deg, #161a16, #101215 60%);
   overflow: hidden;
+  transition:
+    border-color var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
 }
 
 .streak-hero.is-done {
   border-color: rgba(200, 244, 79, 0.6);
   box-shadow: 0 20px 50px -34px rgba(200, 244, 79, 0.9);
-  transition:
-    border-color 220ms var(--ease-out),
-    box-shadow 220ms var(--ease-out);
 }
 
 .streak-hero::after {
@@ -405,17 +408,14 @@ p {
   line-height: 0.95;
   margin: 10px 0 8px;
   color: var(--text);
-  animation: pop 280ms var(--ease-out);
+  animation: pop var(--dur-press) var(--ease-out);
 }
 
 @keyframes pop {
-  0% {
-    transform: scale(0.94);
+  from {
+    transform: scale(0.97);
   }
-  60% {
-    transform: scale(1.03);
-  }
-  100% {
+  to {
     transform: scale(1);
   }
 }
@@ -467,39 +467,38 @@ p {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel-2);
-  animation: rise 260ms var(--ease-out) both;
+  animation: rise 180ms var(--ease-out) backwards;
   transition:
-    transform 180ms var(--ease-out),
-    border-color 180ms var(--ease-out),
-    background-color 180ms var(--ease-out);
+    border-color var(--dur-ui) var(--ease-out),
+    background-color var(--dur-ui) var(--ease-out);
 }
 
 .week-day:nth-child(1) {
-  animation-delay: 20ms;
+  animation-delay: 0ms;
 }
 
 .week-day:nth-child(2) {
-  animation-delay: 50ms;
+  animation-delay: 30ms;
 }
 
 .week-day:nth-child(3) {
-  animation-delay: 80ms;
+  animation-delay: 60ms;
 }
 
 .week-day:nth-child(4) {
-  animation-delay: 110ms;
+  animation-delay: 90ms;
 }
 
 .week-day:nth-child(5) {
-  animation-delay: 140ms;
+  animation-delay: 120ms;
 }
 
 .week-day:nth-child(6) {
-  animation-delay: 170ms;
+  animation-delay: 150ms;
 }
 
 .week-day:nth-child(7) {
-  animation-delay: 200ms;
+  animation-delay: 180ms;
 }
 
 .week-day summary {
@@ -547,21 +546,6 @@ p {
   color: var(--lime);
 }
 
-.week-day[open] .plan-exercises {
-  animation: unfold 200ms var(--ease-out) both;
-}
-
-@keyframes unfold {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .week-day.is-today {
   border-color: rgba(200, 244, 79, 0.55);
   background:
@@ -604,6 +588,18 @@ p {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2px 24px;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+}
+
+@starting-style {
+  .week-day[open] .plan-exercises {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 .plan-exercises li {
@@ -648,9 +644,6 @@ p {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel-2);
-  transition:
-    transform 180ms var(--ease-out),
-    border-color 180ms var(--ease-out);
 }
 
 .plan-day-head {
@@ -840,7 +833,7 @@ p {
   height: 100%;
   background: var(--line);
   transform-origin: bottom center;
-  transition: transform 260ms var(--ease-out);
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 .strip-day.is-active .strip-bar span {
@@ -969,13 +962,13 @@ p {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition:
-    transform 140ms var(--ease-out),
-    background-color 140ms var(--ease-out),
-    border-color 140ms var(--ease-out),
-    box-shadow 140ms var(--ease-out);
+    transform var(--dur-press) var(--ease-out),
+    background-color var(--dur-press) var(--ease-out),
+    border-color var(--dur-press) var(--ease-out),
+    box-shadow var(--dur-press) var(--ease-out);
 }
 
-.btn:active {
+.btn:not(:disabled):active {
   transform: scale(0.97);
 }
 
@@ -1019,12 +1012,6 @@ p {
     background-color 140ms var(--ease-out);
 }
 
-.icon-btn.danger:hover {
-  color: var(--danger);
-  border-color: rgba(255, 107, 94, 0.4);
-  background: rgba(255, 107, 94, 0.08);
-}
-
 .link-btn {
   display: inline-flex;
   align-items: center;
@@ -1062,30 +1049,30 @@ p {
 
   .week-day:hover {
     border-color: #33373f;
-    transform: translateX(2px);
   }
 
   .week-day.is-today:hover {
     border-color: rgba(200, 244, 79, 0.75);
   }
 
-  .plan-day:hover {
-    transform: translateY(-2px);
-    border-color: #33373f;
-  }
-
-  .btn-primary:hover {
+  .btn-primary:not(:disabled):hover {
     background: #d6ff63;
     border-color: #d6ff63;
   }
 
-  .btn-ghost:hover {
+  .btn-ghost:not(:disabled):hover {
     border-color: var(--lime);
     background: var(--lime-dim);
   }
 
-  .btn-danger:hover {
+  .btn-danger:not(:disabled):hover {
     background: rgba(255, 107, 94, 0.1);
+  }
+
+  .icon-btn.danger:hover {
+    color: var(--danger);
+    border-color: rgba(255, 107, 94, 0.4);
+    background: rgba(255, 107, 94, 0.08);
   }
 
   .icon-btn:hover {
@@ -1211,26 +1198,37 @@ p {
 
 @media (prefers-reduced-motion: reduce) {
   .page > *,
-  .week-day,
-  .streak-number,
-  .week-day[open] .plan-exercises {
+  .week-day {
+    animation: fade-in var(--dur-ui) ease both;
+    animation-delay: 0ms !important;
+  }
+
+  .streak-number {
     animation: none;
+  }
+
+  .week-day[open] .plan-exercises {
+    transition: none;
   }
 
   *,
   *::before,
   *::after {
-    transition-property: color, background-color, border-color, opacity;
-    transition-duration: 100ms;
-    animation: none !important;
+    transition-duration: 80ms;
   }
 
-  .btn:active {
+  .btn:not(:disabled):active {
     transform: none;
   }
 
   .plan-day:hover,
   .week-day:hover {
     transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
 }
