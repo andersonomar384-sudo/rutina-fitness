@@ -243,29 +243,31 @@ p {
 }
 
 .page > * {
-  animation: rise var(--dur-ui) var(--ease-out) both;
+  animation: rise var(--dur-slow) var(--ease-out) both;
 }
 
 .page > *:nth-child(2) {
-  animation-delay: 30ms;
+  animation-delay: 40ms;
 }
 
 .page > *:nth-child(3) {
-  animation-delay: 60ms;
+  animation-delay: 80ms;
 }
 
 .page > *:nth-child(4) {
-  animation-delay: 90ms;
+  animation-delay: 120ms;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(12px);
+    filter: blur(3px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -399,6 +401,33 @@ p {
   background: var(--lime);
 }
 
+.streak-flame.is-live {
+  animation: breathe 2.8s var(--ease-in-out) infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.streak-hero.is-done {
+  animation: flare 700ms var(--ease-out);
+}
+
+@keyframes flare {
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 244, 79, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(200, 244, 79, 0);
+  }
+}
+
 .streak-number {
   font-family: var(--font-mono);
   font-size: 64px;
@@ -467,7 +496,7 @@ p {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel-2);
-  animation: rise 180ms var(--ease-out) backwards;
+  animation: rise var(--dur-slow) var(--ease-out) backwards;
   transition:
     border-color var(--dur-ui) var(--ease-out),
     background-color var(--dur-ui) var(--ease-out);
@@ -478,27 +507,27 @@ p {
 }
 
 .week-day:nth-child(2) {
-  animation-delay: 30ms;
+  animation-delay: 40ms;
 }
 
 .week-day:nth-child(3) {
-  animation-delay: 60ms;
+  animation-delay: 80ms;
 }
 
 .week-day:nth-child(4) {
-  animation-delay: 90ms;
-}
-
-.week-day:nth-child(5) {
   animation-delay: 120ms;
 }
 
+.week-day:nth-child(5) {
+  animation-delay: 160ms;
+}
+
 .week-day:nth-child(6) {
-  animation-delay: 150ms;
+  animation-delay: 200ms;
 }
 
 .week-day:nth-child(7) {
-  animation-delay: 180ms;
+  animation-delay: 240ms;
 }
 
 .week-day summary {
@@ -591,14 +620,14 @@ p {
   opacity: 1;
   transform: translateY(0);
   transition:
-    opacity 180ms var(--ease-out),
-    transform 180ms var(--ease-out);
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
 }
 
 @starting-style {
   .week-day[open] .plan-exercises {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-10px);
   }
 }
 

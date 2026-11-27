@@ -34,7 +34,7 @@ export default function Today({
     <div className="page">
       <section className={`streak-hero card ${done ? 'is-done' : ''}`}>
         <div className="streak-main">
-          <span className="streak-flame">
+          <span className={`streak-flame ${streak > 0 ? 'is-live' : ''}`}>
             <FlameIcon size={30} />
           </span>
           <div>
