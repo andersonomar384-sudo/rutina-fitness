@@ -372,6 +372,27 @@ p {
   box-shadow: 0 20px 50px -34px rgba(200, 244, 79, 0.9);
 }
 
+.streak-hero::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -30%;
+  width: 55%;
+  height: 220%;
+  background: radial-gradient(closest-side, rgba(200, 244, 79, 0.18), transparent 72%);
+  pointer-events: none;
+  animation: sheen 7s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes sheen {
+  from {
+    transform: translateX(-6%);
+  }
+  to {
+    transform: translateX(150%);
+  }
+}
+
 .streak-hero::after {
   content: '';
   position: absolute;
@@ -1232,7 +1253,8 @@ p {
     animation-delay: 0ms !important;
   }
 
-  .streak-number {
+  .streak-number,
+  .streak-hero::before {
     animation: none;
   }
 
