@@ -1,20 +1,33 @@
 import type { Exercise } from '../types'
-import { CheckIcon, FlameIcon, MinusIcon, PlusIcon, RotateIcon } from './Icons'
+import { SPLIT_6 } from '../lib/plan'
+import { CheckIcon, FlameIcon, RotateIcon } from './Icons'
 
 type Props = {
   exercises: Exercise[]
   log: Record<string, number>
   streak: number
   best: number
-  onSet: (exerciseId: string, value: number) => void
+  onCompleteDay: () => void
   onResetDay: () => void
 }
 
-const unitLabel = (unit: Exercise['unit']) => (unit === 'seg' ? 'seg' : 'reps')
+/** 0 = lunes … 6 = domingo */
+function todayIndex(): number {
+  return (new Date().getDay() + 6) % 7
+}
 
-export default function Today({ exercises, log, streak, best, onSet, onResetDay }: Props) {
-  const completed = exercises.filter((exercise) => (log[exercise.id] ?? 0) >= exercise.target).length
-  const percent = exercises.length > 0 ? Math.round((completed / exercises.length) * 100) : 0
+export default function Today({
+  exercises,
+  log,
+  streak,
+  best,
+  onCompleteDay,
+  onResetDay,
+}: Props) {
+  const index = todayIndex()
+  const current = SPLIT_6[index]
+  const done =
+    exercises.length > 0 && exercises.every((exercise) => (log[exercise.id] ?? 0) >= exercise.target)
   const hasData = Object.values(log).some((value) => value > 0)
 
   return (
@@ -30,11 +43,7 @@ export default function Today({ exercises, log, streak, best, onSet, onResetDay 
               {streak} <span>{streak === 1 ? 'día' : 'días'}</span>
             </p>
             <p className="muted small">
-              {streak === 0
-                ? 'Marca al menos un ejercicio hoy para empezar.'
-                : completed === exercises.length
-                  ? 'Rutina completa. Así se mantiene.'
-                  : 'Un ejercicio cuenta para la racha.'}
+              {current ? `Hoy toca ${current.focus.toLowerCase()}.` : 'Hoy es descanso activo.'}
             </p>
           </div>
         </div>
@@ -42,9 +51,7 @@ export default function Today({ exercises, log, streak, best, onSet, onResetDay 
         <div className="streak-side">
           <div>
             <span className="side-label">Hoy</span>
-            <strong>
-              {completed}/{exercises.length}
-            </strong>
+            <strong>{done ? 'Hecho' : 'Pendiente'}</strong>
           </div>
           <div>
             <span className="side-label">Récord</span>
@@ -54,84 +61,63 @@ export default function Today({ exercises, log, streak, best, onSet, onResetDay 
       </section>
 
       <section className="card">
-        <header className="card-head row">
-          <div>
-            <h2>Rutina de hoy</h2>
-            <p>Suma repeticiones o segundos hasta llegar a la meta.</p>
-          </div>
-          <span className={`status-pill ${percent === 100 ? 'on' : ''}`}>
-            {percent}% completado
-          </span>
+        <header className="card-head">
+          <h2>Plan semanal</h2>
+          <p>
+            Empuje, tirón y pierna con dos mancuernas. Pulsa un día para ver sus ejercicios.
+          </p>
         </header>
 
-        <div className="day-progress" aria-hidden="true">
-          <span style={{ transform: `scaleX(${percent / 100})` }} />
+        <div className="week-list">
+          {SPLIT_6.map((day, position) => (
+            <details
+              key={day.day}
+              className={`week-day ${position === index ? 'is-today' : ''}`}
+              open={position === index}
+            >
+              <summary>
+                <span className="week-day-name">{day.day}</span>
+                <span className="week-focus">{day.focus}</span>
+                {position === index && <span className="today-tag">Hoy</span>}
+                <span className="week-toggle" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <ul className="plan-exercises">
+                {day.exercises.map((exercise) => (
+                  <li key={exercise.name}>
+                    <span>{exercise.name}</span>
+                    <small>{exercise.sets}</small>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+
+          <div className={`week-day is-rest ${index === 6 ? 'is-today' : ''}`}>
+            <span className="week-day-name">Domingo</span>
+            <span className="week-focus">Descanso activo: caminar 30-45 min</span>
+            {index === 6 && <span className="today-tag">Hoy</span>}
+          </div>
         </div>
 
-        <ul className="exercise-list">
-          {exercises.map((exercise) => {
-            const value = log[exercise.id] ?? 0
-            const done = value >= exercise.target
-            const ratio = exercise.target > 0 ? Math.min(1, value / exercise.target) : 0
-
-            return (
-              <li key={exercise.id} className={`exercise ${done ? 'is-done' : ''}`}>
-                <div className="exercise-info">
-                  <span className="exercise-name">
-                    {done && <CheckIcon size={15} />}
-                    {exercise.name}
-                  </span>
-                  <span className="exercise-meta">
-                    Meta {exercise.target} {unitLabel(exercise.unit)}
-                  </span>
-                </div>
-
-                <div className="exercise-bar" aria-hidden="true">
-                  <span style={{ transform: `scaleX(${ratio})` }} />
-                </div>
-
-                <div className="exercise-value">
-                  <strong>{value}</strong>
-                  <small>{unitLabel(exercise.unit)}</small>
-                </div>
-
-                <div className="exercise-actions">
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    onClick={() => onSet(exercise.id, Math.max(0, value - exercise.step))}
-                    aria-label={`Quitar ${exercise.step} a ${exercise.name}`}
-                  >
-                    <MinusIcon size={15} />
-                  </button>
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    onClick={() => onSet(exercise.id, value + exercise.step)}
-                    aria-label={`Sumar ${exercise.step} a ${exercise.name}`}
-                  >
-                    <PlusIcon size={15} />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-small"
-                    onClick={() => onSet(exercise.id, exercise.target)}
-                    disabled={done}
-                  >
-                    Meta
-                  </button>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-
-        {hasData && (
-          <button type="button" className="link-btn reset-day" onClick={onResetDay}>
-            <RotateIcon size={14} />
-            Reiniciar el día
+        <div className="plan-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={onCompleteDay}
+            disabled={done}
+          >
+            <CheckIcon size={16} />
+            {done ? 'Entrenamiento completado' : 'Marcar entrenamiento de hoy'}
           </button>
-        )}
+          {hasData && (
+            <button type="button" className="link-btn" onClick={onResetDay}>
+              <RotateIcon size={14} />
+              Reiniciar el día
+            </button>
+          )}
+        </div>
       </section>
     </div>
   )

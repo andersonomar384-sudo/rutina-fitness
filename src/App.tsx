@@ -40,12 +40,14 @@ export default function App() {
   const best = useMemo(() => bestStreak(state.logs), [state.logs])
   const todayLog = state.logs[today] ?? {}
 
-  const setValue = (exerciseId: string, value: number) => {
+  const completeDay = () => {
     setState((current) => ({
       ...current,
       logs: {
         ...current.logs,
-        [today]: { ...(current.logs[today] ?? {}), [exerciseId]: Math.max(0, value) },
+        [today]: Object.fromEntries(
+          current.exercises.map((exercise) => [exercise.id, exercise.target]),
+        ),
       },
     }))
   }
@@ -109,7 +111,7 @@ export default function App() {
             log={todayLog}
             streak={streak}
             best={best}
-            onSet={setValue}
+            onCompleteDay={completeDay}
             onResetDay={resetDay}
           />
         )}

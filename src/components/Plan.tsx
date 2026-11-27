@@ -1,4 +1,4 @@
-import { RECOMMENDED, SPLIT_6 } from '../lib/plan'
+import { RECOMMENDED } from '../lib/plan'
 
 export default function Plan() {
   return (
@@ -46,36 +46,14 @@ export default function Plan() {
       <section className="card">
         <header className="card-head">
           <h2>Split de 6 días · estilo imagen</h2>
-          <p>
-            La misma estructura de la imagen (empuje / tirón / pierna) repetida dos veces, con
-            ejercicios posibles usando solo dos mancuernas.
-          </p>
+          <p>El calendario completo, con el día de hoy resaltado, está en la pestaña Hoy.</p>
         </header>
-        <div className="week-list">
-          {SPLIT_6.map((day) => (
-            <details key={day.day} className="week-day">
-              <summary>
-                <span className="week-day-name">{day.day}</span>
-                <span className="week-focus">{day.focus}</span>
-                <span className="week-toggle" aria-hidden="true">
-                  +
-                </span>
-              </summary>
-              <ul className="plan-exercises">
-                {day.exercises.map((exercise) => (
-                  <li key={exercise.name}>
-                    <span>{exercise.name}</span>
-                    <small>{exercise.sets}</small>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          ))}
-          <div className="week-day is-rest">
-            <span className="week-day-name">Domingo</span>
-            <span className="week-focus">Descanso activo: caminar 30-45 min</span>
-          </div>
-        </div>
+        <ul className="tips">
+          <li>Lunes y jueves: pecho, hombro y tríceps.</li>
+          <li>Martes y viernes: espalda, bíceps y antebrazo.</li>
+          <li>Miércoles y sábado: pierna completa y abdomen.</li>
+          <li>Domingo: descanso activo.</li>
+        </ul>
       </section>
 
       <section className="card">

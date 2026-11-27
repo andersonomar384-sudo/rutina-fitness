@@ -740,6 +740,34 @@ p {
   color: var(--muted);
 }
 
+.week-day.is-today {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.today-tag {
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
 .tips {
   list-style: none;
   margin: 0;
